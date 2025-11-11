@@ -1,0 +1,117 @@
+.auth-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* AuthForms.css */
+
+.auth-page-container {
+  flex: 1; /* ← OVO ĆE SADA RADITI JER POSTOJI DIV */
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 2rem;
+  width: 100%;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.auth-form {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  width: 100%;
+  max-width: 350px;
+  margin-right: 2rem;
+  margin-top: 2rem;
+}
+
+/* OSTALI STILOVI... */
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: #fff;
+  font-family: inherit;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.8rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.auth-button:hover {
+  background: #0056b3;
+}
+
+.auth-error {
+  color: #dc3545;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f8d7da;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+}
+
+.logout-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #c82333;
+}
+
+@media (max-width: 768px) {
+  .auth-page-container {
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .auth-form {
+    margin-right: 0;
+    max-width: 100%;
+  }
+}

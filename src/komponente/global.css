@@ -1,0 +1,182 @@
+body {
+  background-image: url('./Logo-Background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed; 
+  background-size: cover;
+  background-color: #f8f9fa;
+  opacity: 1;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+}
+
+body::before {
+  content: '';
+    background-image: url('./Logo-Background.jpg');
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed; 
+  background-size: cover;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+        /*BITNO ZA STICKY FOOTER*/
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.auth-page-container,
+.recepti-container,
+.detalji-recepta,
+.dodaj-recept-container {
+  flex: 1;
+}
+/* Tableti (768px - 1024px) */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  /* Globalne promjene za tablete */
+  body {
+    font-size: 15px;
+  }
+}
+
+/* Mobilni uredaji (576px - 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  /* Globalne promjene za mobilne */
+  body {
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* Sakrij neke elemente na mobilnom */
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* Mali mobilni uredaji (do 576px) */
+@media (max-width: 576px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  body {
+    font-size: 13px;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+  }
+  
+  /* Utility klase za mobilne */
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+/* ===== RESPONZIVNE UTILITY KLASE ===== */
+/* ===== Besramno skinuto sa ChatGpt-a ==== */
+
+/* Grid responzivnost */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Flex responzivnost */
+.responsive-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Slike responzivne */
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== RESPONZIVNE KOMPONENTE ===== */
+
+/* Navigation responzivnost */
+@media (max-width: 768px) {
+  .navigation {
+    padding: 0.5rem 0;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Form responzivnost */
+@media (max-width: 768px) {
+  .auth-form,
+  .forma-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+  }
+  
+  .filter-bar input,
+  .filter-bar select {
+    width: 100%;
+  }
+}
+
+/* Card responzivnost */
+@media (max-width: 768px) {
+  .recept-kartica {
+    margin: 0.5rem;
+  }
+  
+  .recept-grid {
+    grid-template-columns: 1fr;
+  }
+}

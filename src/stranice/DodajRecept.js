@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db, auth } from "../firebase"; // dodano auth
+import { db, auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth"; // dodano
+import { onAuthStateChanged } from "firebase/auth"; 
 import "./DodajRecept.css";
 
 function DodajRecept() {
@@ -14,6 +14,7 @@ function DodajRecept() {
   const [vrijemePripreme, postaviVrijeme] = useState("");
   const [tagovi, postaviTagove] = useState("");
   const [kuhinja, postaviKuhinju] = useState("");
+  const [slike, postaviSlike] = useState([""]); 
   const [slika, postaviSliku] = useState("");
   const [poruka, postaviPoruku] = useState("");
   const [loading, postaviLoading] = useState(false);
@@ -32,35 +33,63 @@ function DodajRecept() {
     return unsubscribe;
   }, []);
 
-  // Ako uređujemo, učitaj recept (isto kao prije)
-  useEffect(() => {
-    if (id) {
-      postaviLoading(true);
-      const docRef = doc(db, "recepti", id);
-      getDoc(docRef)
-        .then((docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            postaviNaziv(data.naziv || "");
-            postaviOpis(data.opis || "");
-            postaviSastojke((data.sastojci || []).join(", "));
-            postaviPripremu(data.priprema || "");
-            postaviVrijeme(data.vrijemePripreme || "");
-            postaviTagove((data.tagovi || []).join(", "));
-            postaviKuhinju(data.kuhinja || "");
-            postaviSliku(data.slika || "");
+// Ako uređujemo, učitaj recept
+useEffect(() => {
+  if (id) {
+    postaviLoading(true);
+    const docRef = doc(db, "recepti", id);
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          postaviNaziv(data.naziv || "");
+          postaviOpis(data.opis || "");
+          postaviSastojke((data.sastojci || []).join(", "));
+          postaviPripremu(data.priprema || "");
+          postaviVrijeme(data.vrijemePripreme || "");
+          postaviTagove((data.tagovi || []).join(", "));
+          postaviKuhinju(data.kuhinja || "");
+          
+         
+          if (data.slike && data.slike.length > 0) {
+            postaviSlike(data.slike);
+          } else if (data.slika) {
+
+            // Kompatibilnost sa starim receptima koji imaju jednu sliku
+            postaviSlike([data.slika]);
           } else {
-            postaviPoruku("Recept nije pronađen.");
+            postaviSlike([""]);
           }
-        })
-        .catch(() => {
-          postaviPoruku("Greška pri učitavanju recepta.");
-        })
-        .finally(() => {
-          postaviLoading(false);
-        });
-    }
-  }, [id]);
+          
+          postaviSliku(data.slika || "");
+        } else {
+          postaviPoruku("Recept nije pronađen.");
+        }
+      })
+      .catch(() => {
+        postaviPoruku("Greška pri učitavanju recepta.");
+      })
+      .finally(() => {
+        postaviLoading(false);
+      });
+  }
+}, [id]);
+
+const dodajSliku = () => {
+  postaviSlike([...slike, ""]);
+};
+
+const ukloniSliku = (index) => {
+  if (slike.length > 1) {
+    const noveSlike = slike.filter((_, i) => i !== index);
+    postaviSlike(noveSlike);
+  }
+};
+
+const promjeniSliku = (index, url) => {
+  const noveSlike = slike.map((slika, i) => i === index ? url : slika);
+  postaviSlike(noveSlike);
+};
 
   const spremiRecept = async (e) => {
     e.preventDefault();
@@ -74,16 +103,18 @@ function DodajRecept() {
     postaviPoruku("");
 
     try {
+      const filtriraneSlike = slike.filter(url => url.trim() !== "");
       const receptPodaci = {
-        naziv,
-        opis,
-        sastojci: sastojci.split(",").map((s) => s.trim()),
-        priprema,
-        vrijemePripreme,
-        tagovi: tagovi.split(",").map((t) => t.trim()),
-        kuhinja,
-        slika,
-      };
+    naziv,
+    opis,
+    sastojci: sastojci.split(",").map((s) => s.trim()),
+    priprema,
+    vrijemePripreme,
+    tagovi: tagovi.split(",").map((t) => t.trim()),
+    kuhinja,
+    slike: filtriraneSlike,
+    slika: filtriraneSlike.length > 0 ? filtriraneSlike[0] : ""
+};
 
       if (id) {
         const docRef = doc(db, "recepti", id);
@@ -180,17 +211,55 @@ function DodajRecept() {
           placeholder="Balkanska / Talijanska / Azijska..."
         />
 
-        <label>URL slike (opcionalno)</label>
-        <input
-          type="text"
-          value={slika}
-          onChange={(e) => postaviSliku(e.target.value)}
-          placeholder="https://..."
-        />
+       <label>Slike (URL-ovi, opcionalno)</label>
+              {slike.map((slika, index) => (
+                <div key={index} style={{ display: "flex", marginBottom: "10px" }}>
+                  <input
+                    type="text"
+                    value={slika}
+                    onChange={(e) => promjeniSliku(index, e.target.value)}
+                    placeholder={`URL slike ${index + 1}...`}
+                    style={{ flex: 1 }}
+                  />
+                  {slike.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => ukloniSliku(index)}
+                      style={{ 
+                        marginLeft: "10px", 
+                        background: "red", 
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "5px 10px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
 
-        <button type="submit" disabled={loading}>
-          {id ? "Spremi promjene" : "Spremi recept"}
-        </button>
+              <button
+                type="button"
+                onClick={dodajSliku}
+                style={{
+                  background: "#4CAF50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "8px 15px",
+                  cursor: "pointer",
+                  marginBottom: "15px"
+                }}
+              >
+                + Dodaj još jednu sliku
+              </button>
+
+<button type="submit" disabled={loading}>
+  {id ? "Spremi promjene" : "Spremi recept"}
+</button>
       </form>
 
       {poruka && !poruka.startsWith("✅") && (

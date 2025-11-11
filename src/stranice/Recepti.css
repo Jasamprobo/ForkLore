@@ -1,68 +1,133 @@
+/* Recepti.css - TRANSPARENTNIJE KARTICE */
+
 .recepti-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
-  font-family: sans-serif;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.recept-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
 .recept-kartica {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-  padding: 1rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column; /* već je kolona, slika gore, tekst dolje */
+  background: rgba(255, 255, 255, 0.7); /* ← PROZIRNA BIJELA */
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.8); /* ← PROZIRAN BORDER */
+  position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease;
-  min-height: 300px;
-  max-height: 320px;
+  backdrop-filter: blur(10px); /* ← BLUR EFEKT */
+}
+
+.recept-kartica::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .recept-kartica:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.9); /* ← MALO JAČA NA HOVER */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
 }
 
-.recept-kartica h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
-  line-height: 1.2;
-  height: 2.4em; /* fiksna visina za naslov, max 2 reda */
-  overflow: hidden;
-  text-overflow: ellipsis;
+.recept-kartica:hover::before {
+  opacity: 1;
 }
 
 .recept-slika {
   width: 100%;
-  height: 140px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 10px 10px 0 0; /* zaobljeni gornji rubovi */
-  margin: 0 0 1rem 0; /* margin bottom da se razdvoji od teksta */
-  background-color: #f0f0f0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: rgba(248, 249, 250, 0.8); 
 }
 
-.opis {
-  flex-grow: 1;
-  font-size: 0.9rem;
-  color: #555;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* samo 3 reda teksta */
-  -webkit-box-orient: vertical;
-  margin-bottom: 0.5rem;
+.recept-kartica h3 {
+  margin: 0 0 0.8rem 0;
+  color: #2d3748;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.priprema-skraćena {
-  font-size: 0.9rem;
-  color: #555;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* još kraće, 2 reda */
-  -webkit-box-orient: vertical;
-  margin-top: auto;
+.recept-kartica p {
+  margin: 0.5rem 0;
+  color: #4a5568; 
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
+
+.recept-kartica strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7); 
+  padding: 2rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.filter-bar input,
+.filter-bar select {
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgba(224, 224, 224, 0.8);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: rgba(250, 250, 250, 0.9);
+  transition: all 0.3s ease;
+  min-width: 160px;
+  font-family: inherit;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.success-message {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.recept-kartica {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firebase"; // Pretpostavljam da sad trebaš exportat auth u firebase.js
+import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import "../komponente/AuthForms.css";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -16,21 +17,16 @@ function Register() {
     setError("");
 
     try {
-      // Kreiraj korisnika
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Dodaj displayName u auth profil (username)
       await updateProfile(user, { displayName: username });
-
-      // Spremi korisnika u Firestore
       await setDoc(doc(db, "users", user.uid), {
         username: username,
         email: email,
         createdAt: new Date(),
       });
 
-      // Preusmjeri na početnu
       navigate("/");
     } catch (error) {
       setError(error.message);
@@ -38,31 +34,39 @@ function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Lozinka"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Registriraj se</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </form>
+    <div className="auth-page-container">  {/* ← DODAJ OVO! */}
+      <div className="auth-container">
+        <form onSubmit={handleSubmit} className="auth-form">
+          <h2>Registracija</h2>
+          <input
+            type="text"
+            placeholder="Korisničko ime"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="auth-input"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="auth-input"
+          />
+          <input
+            type="password"
+            placeholder="Lozinka"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="auth-input"
+          />
+          <button type="submit" className="auth-button">Registriraj se</button>
+          {error && <p className="auth-error">{error}</p>}
+        </form>
+      </div>
+    </div>
   );
 }
 

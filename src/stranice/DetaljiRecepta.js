@@ -9,9 +9,11 @@ import {
   collection,
   addDoc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../komponente/AuthContext";
+import "./DetaljiRecepta.css";
 
 function DetaljiRecepta() {
   const { id } = useParams();
@@ -20,10 +22,12 @@ function DetaljiRecepta() {
   const [komentari, setKomentari] = useState([]);
   const [noviKomentar, setNoviKomentar] = useState("");
   const [updating, setUpdating] = useState(false);
+  const [userReaction, setUserReaction] = useState(null); // 'like', 'dislike' ili null
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const { currentUser, userData } = useAuth();
 
-  // Dohvati recept i komentare
+  // Dohvati recept, komentare i korisnikovu reakciju
   useEffect(() => {
     const fetchRecept = async () => {
       setLoading(true);
@@ -46,15 +50,26 @@ function DetaljiRecepta() {
           komentari: data.komentari || [],
         });
 
+        // Dohvati korisnikovu reakciju
+        if (currentUser) {
+          const userReactionRef = doc(db, "users", currentUser.uid, "reactions", id);
+          const userReactionSnap = await getDoc(userReactionRef);
+          
+          if (userReactionSnap.exists()) {
+            setUserReaction(userReactionSnap.data().type);
+          } else {
+            setUserReaction(null);
+          }
+        }
+
+        // Dohvati komentare
         if (data.komentari && data.komentari.length > 0) {
-          // Dohvati komentare po ID-jevima
           const komentariDocs = await Promise.all(
             data.komentari.map(async (komentarId) => {
               const kDoc = await getDoc(doc(db, "komentari", komentarId));
               return kDoc.exists() ? { id: kDoc.id, ...kDoc.data() } : null;
             })
           );
-
           setKomentari(komentariDocs.filter((k) => k !== null));
         } else {
           setKomentari([]);
@@ -69,92 +84,124 @@ function DetaljiRecepta() {
     };
 
     fetchRecept();
-  }, [id]);
+  }, [id, currentUser]);
 
-  // Dodaj komentar
-  const handleDodajKomentar = async () => {
-    if (!currentUser) {
-      alert("Moraš biti prijavljen da bi komentirao.");
-      return;
-    }
-    if (noviKomentar.trim() === "") {
-      alert("Komentar ne može biti prazan.");
-      return;
-    }
-
+  // LIKE FUNKCIJA
+  const handleLike = async () => {
+    if (!currentUser || !recept || updating) return;
+    
     setUpdating(true);
     try {
-      // Kreiraj novi komentar u kolekciji "komentari"
-      const docRef = await addDoc(collection(db, "komentari"), {
-        tekst: noviKomentar.trim(),
-        userId: currentUser.uid,
-        username: currentUser.displayName || currentUser.email || "Anonimac",
-        createdAt: new Date(),
-      });
-
-      // Dodaj ID komentara u recept
+      const userReactionRef = doc(db, "users", currentUser.uid, "reactions", id);
       const receptRef = doc(db, "recepti", id);
-      await updateDoc(receptRef, {
-        komentari: arrayUnion(docRef.id),
-      });
 
-      // Lokalno update komentara i reset textarea
-      setKomentari((prev) => [
-        ...prev,
-        {
-          id: docRef.id,
-          tekst: noviKomentar.trim(),
-          userId: currentUser.uid,
-          username: currentUser.displayName || currentUser.email || "Anonimac",
-          createdAt: new Date(),
-        },
-      ]);
-      setNoviKomentar("");
+      if (userReaction === 'like') {
+        // Ukloni like
+        await deleteDoc(userReactionRef);
+        await updateDoc(receptRef, {
+          likes: arrayRemove(currentUser.uid)
+        });
+        setUserReaction(null);
+        setRecept(prev => ({
+          ...prev,
+          likes: prev.likes.filter(uid => uid !== currentUser.uid)
+        }));
+      } else {
+        // Dodaj like i ukloni dislike ako postoji
+        await setDoc(userReactionRef, {
+          type: 'like',
+          createdAt: new Date()
+        });
+
+        const updates = {
+          likes: arrayUnion(currentUser.uid)
+        };
+
+        if (userReaction === 'dislike') {
+          updates.dislikes = arrayRemove(currentUser.uid);
+        }
+
+        await updateDoc(receptRef, updates);
+
+        setUserReaction('like');
+        setRecept(prev => ({
+          ...prev,
+          likes: [...prev.likes, currentUser.uid],
+          dislikes: userReaction === 'dislike' 
+            ? prev.dislikes.filter(uid => uid !== currentUser.uid)
+            : prev.dislikes
+        }));
+      }
     } catch (error) {
-      console.error("Greška prilikom dodavanja komentara:", error);
-      alert("Greška prilikom dodavanja komentara.");
+      console.error("Greška pri like:", error);
+      alert("Greška pri like-anju recepta.");
     } finally {
       setUpdating(false);
     }
   };
 
-  // Briši komentar (samo admin)
-  const handleBrisiKomentar = async (komentarId) => {
-    if (!currentUser) {
-      alert("Niste prijavljeni.");
-      return;
-    }
-    if (userData?.role !== "admin") {
-      alert("Nemate ovlasti za brisanje komentara.");
-      return;
-    }
-
+  // DISLIKE FUNKCIJA
+  const handleDislike = async () => {
+    if (!currentUser || !recept || updating) return;
+    
     setUpdating(true);
     try {
-      // Briši komentar iz kolekcije komentari
-      await deleteDoc(doc(db, "komentari", komentarId));
-
-      // Ukloni komentar ID iz recepta
+      const userReactionRef = doc(db, "users", currentUser.uid, "reactions", id);
       const receptRef = doc(db, "recepti", id);
-      await updateDoc(receptRef, {
-        komentari: arrayRemove(komentarId),
-      });
 
-      // Lokalno ukloni komentar iz liste
-      setKomentari((prev) => prev.filter((k) => k.id !== komentarId));
+      if (userReaction === 'dislike') {
+        // Ukloni dislike
+        await deleteDoc(userReactionRef);
+        await updateDoc(receptRef, {
+          dislikes: arrayRemove(currentUser.uid)
+        });
+        setUserReaction(null);
+        setRecept(prev => ({
+          ...prev,
+          dislikes: prev.dislikes.filter(uid => uid !== currentUser.uid)
+        }));
+      } else {
+        // Dodaj dislike i ukloni like ako postoji
+        await setDoc(userReactionRef, {
+          type: 'dislike',
+          createdAt: new Date()
+        });
+
+        const updates = {
+          dislikes: arrayUnion(currentUser.uid)
+        };
+
+        if (userReaction === 'like') {
+          updates.likes = arrayRemove(currentUser.uid);
+        }
+
+        await updateDoc(receptRef, updates);
+
+        setUserReaction('dislike');
+        setRecept(prev => ({
+          ...prev,
+          dislikes: [...prev.dislikes, currentUser.uid],
+          likes: userReaction === 'like' 
+            ? prev.likes.filter(uid => uid !== currentUser.uid)
+            : prev.likes
+        }));
+      }
     } catch (error) {
-      console.error("Greška pri brisanju komentara:", error);
-      alert("Greška pri brisanju komentara.");
+      console.error("Greška pri dislike:", error);
+      alert("Greška pri dislike-anju recepta.");
     } finally {
       setUpdating(false);
     }
+  };
+
+  const handleDodajKomentar = async () => {
+  };
+
+  const handleBrisiKomentar = async (komentarId) => {
   };
 
   if (loading) return <p>Učitavanje...</p>;
   if (!recept) return <p>Recept nije pronađen.</p>;
-
-  const userLiked = currentUser && recept.likes.includes(currentUser.uid);
-  const userDisliked = currentUser && recept.dislikes.includes(currentUser.uid);
 
   return (
     <div className="detalji-recepta">
@@ -163,9 +210,25 @@ function DetaljiRecepta() {
       <p><strong>Vrijeme pripreme:</strong> {recept.vrijemePripreme || "N/A"}</p>
       <p><strong>Tagovi:</strong> {recept.tagovi?.join(", ") || "Nema tagova"}</p>
 
-      {recept.slika && (
-        <img src={recept.slika} alt={recept.naziv} style={{ maxWidth: "400px", borderRadius: "10px" }} />
-      )}
+     {/* PRIKAZ VIŠE SLIKA */}
+  {recept.slike && recept.slike.length > 0 ? (
+      <div className="slike-container">
+      <h3>Slike</h3>
+      <div className="slike-grid">
+        {recept.slike.map((slika, index) => (
+          <img 
+            key={index}
+            src={slika} 
+            alt={`${recept.naziv} ${index + 1}`} 
+            className="slika-recepta"
+              />
+            ))}
+            </div>
+            </div>
+        ) : recept.slika ? (
+  // Fallback za stare recepte koji imaju samo jednu sliku treba maknuti nakon //
+  <img src={recept.slika} alt={recept.naziv} className="slika-recepta-stara" />
+) : null}
 
       <h3>Opis</h3>
       <p>{recept.opis}</p>
@@ -188,18 +251,14 @@ function DetaljiRecepta() {
         </>
       )}
 
-      {/* Lajk / Dislajk */}
+      {/* Lajk / Dislajk - AŽURIRANO */}
       <div style={{ marginTop: "20px" }}>
         {currentUser ? (
           <>
             <button
-              onClick={() => {
-                if (!updating) {
-                  // logic for like
-                }
-              }}
+              onClick={handleLike}
               style={{
-                color: userLiked ? "green" : "black",
+                color: userReaction === 'like' ? "green" : "black",
                 marginRight: "10px",
                 cursor: updating ? "not-allowed" : "pointer",
               }}
@@ -210,13 +269,9 @@ function DetaljiRecepta() {
             </button>
 
             <button
-              onClick={() => {
-                if (!updating) {
-                  // logic for dislike
-                }
-              }}
+              onClick={handleDislike}
               style={{
-                color: userDisliked ? "red" : "black",
+                color: userReaction === 'dislike' ? "red" : "black",
                 cursor: updating ? "not-allowed" : "pointer",
               }}
               disabled={updating}
@@ -242,7 +297,6 @@ function DetaljiRecepta() {
         )}
       </div>
 
-      {/* Komentari */}
       <h3>Komentari</h3>
       {komentari.length === 0 && <p>Nema komentara.</p>}
       <ul>
@@ -262,7 +316,6 @@ function DetaljiRecepta() {
         ))}
       </ul>
 
-      {/* Dodaj komentar */}
       {currentUser ? (
         <div style={{ marginTop: "10px" }}>
           <textarea

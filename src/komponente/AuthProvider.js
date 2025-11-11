@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db } from "../firebase"; // prilagodi putanju ako treba
+import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 const AuthContext = createContext();

@@ -1,0 +1,247 @@
+/* DetaljiRecepta.css - PRILAGOĐENO ZA BIJELU KAVU POZADINU */
+
+.detalji-recepta {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.8); /* ← PROZIRNA BIJELA ZA KONTRAST */
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.detalji-recepta h2 {
+  color: #5d4037; /* ← TAMNIJA KAVA BOJA */
+  border-bottom: 3px solid #8d6e63; /* ← KAVA BOJA */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.detalji-recepta h3 {
+  color: #6d4c41; /* ← KAVA BOJA */
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.detalji-recepta p {
+  margin-bottom: 15px;
+  color: #5d4037; /* ← TAMNIJA KAVA ZA TEKST */
+}
+
+.detalji-recepta strong {
+  color: #4e342e; /* ← JOŠ TAMNIJA KAVA */
+}
+
+/* SLIKE */
+.slike-container {
+  margin: 20px 0;
+}
+
+.slike-grid {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.slika-recepta {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+  border: 2px solid rgba(141, 110, 99, 0.2); /* ← KAVA BORDER */
+}
+
+.slika-recepta:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.slika-recepta-stara {
+  max-width: 400px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(141, 110, 99, 0.2);
+}
+
+/* SASTOJCI I LISTE */
+.detalji-recepta ul {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.detalji-recepta li {
+  margin-bottom: 8px;
+  color: #5d4037;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid #8d6e63;
+}
+
+/* LIKE/DISLIKE */
+.like-dislike-container {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(141, 110, 99, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.like-btn, .dislike-btn {
+  padding: 10px 20px;
+  margin-right: 15px;
+  border: 2px solid #a1887f; /* ← KAVA SIVA */
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #5d4037;
+}
+
+.like-btn:hover:not(.disabled), 
+.dislike-btn:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.like-btn.liked {
+  color: #388e3c; /* ← ZELENA */
+  border-color: #388e3c;
+  background: rgba(56, 142, 60, 0.1);
+}
+
+.like-btn.not-liked {
+  color: #5d4037;
+  border-color: #a1887f;
+}
+
+.dislike-btn.disliked {
+  color: #d32f2f; /* ← CRVENA */
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.1);
+}
+
+.dislike-btn.not-disliked {
+  color: #5d4037;
+  border-color: #a1887f;
+}
+
+.like-btn.disabled, 
+.dislike-btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+/* KOMENTARI */
+.komentari-lista {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.komentar-item {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #8d6e63; /* ← KAVA BOJA */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(141, 110, 99, 0.2);
+}
+
+.komentar-item strong {
+  color: #4e342e;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.brisi-komentar-btn {
+  background: none;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.brisi-komentar-btn:hover:not(:disabled) {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.brisi-komentar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* FORMA ZA KOMENTARE */
+.komentar-forma {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(141, 110, 99, 0.2);
+}
+
+.komentar-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #a1887f;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.komentar-textarea:focus {
+  outline: none;
+  border-color: #8d6e63;
+  box-shadow: 0 0 0 2px rgba(141, 110, 99, 0.2);
+}
+
+.komentar-textarea:disabled {
+  background-color: rgba(236, 240, 241, 0.7);
+  cursor: not-allowed;
+}
+
+.komentar-submit {
+  background: #8d6e63; /* ← KAVA BOJA */
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.komentar-submit:hover:not(:disabled) {
+  background: #6d4c41; /* ← TAMNIJA KAVA */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(109, 76, 65, 0.3);
+}
+
+.komentar-submit:disabled {
+  background-color: #bcaaa4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
