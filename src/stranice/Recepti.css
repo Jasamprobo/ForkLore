@@ -1,0 +1,68 @@
+.recepti-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: sans-serif;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.recept-kartica {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column; /* već je kolona, slika gore, tekst dolje */
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  min-height: 300px;
+  max-height: 320px;
+}
+
+.recept-kartica:hover {
+  transform: scale(1.05);
+}
+
+.recept-kartica h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  height: 2.4em; /* fiksna visina za naslov, max 2 reda */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recept-slika {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0; /* zaobljeni gornji rubovi */
+  margin: 0 0 1rem 0; /* margin bottom da se razdvoji od teksta */
+  background-color: #f0f0f0;
+}
+
+.opis {
+  flex-grow: 1;
+  font-size: 0.9rem;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* samo 3 reda teksta */
+  -webkit-box-orient: vertical;
+  margin-bottom: 0.5rem;
+}
+
+.priprema-skraćena {
+  font-size: 0.9rem;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* još kraće, 2 reda */
+  -webkit-box-orient: vertical;
+  margin-top: auto;
+}
