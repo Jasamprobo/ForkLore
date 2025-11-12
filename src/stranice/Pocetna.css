@@ -14,12 +14,25 @@
   border-radius: 8px;
   color: white;
   margin-bottom: 2rem;
+  position: relative;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
 }
 
 .hero-section h1 {
   font-size: 2.2rem;
   margin-bottom: 0.3rem;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  position: relative;
 }
 
 .hero-section p {
@@ -27,6 +40,7 @@
   max-width: 480px;
   margin: 0 auto;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  position: relative;
 }
 
 .popularni-recepti-grid {
@@ -37,10 +51,29 @@
   flex-wrap: nowrap;
   overflow-x: auto;
   padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.popularni-recepti-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.popularni-recepti-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.popularni-recepti-grid::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.popularni-recepti-grid::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
 .recept-kartica {
-  flex: 0 0 150px; /* fixed width */
+  flex: 0 0 150px;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #fff;
@@ -50,11 +83,13 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  min-height: 180px;
 }
 
 .recept-kartica:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
 }
 
 .recept-slika {
@@ -80,12 +115,16 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .lajkovi {
   font-size: 0.85rem;
   color: #888;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .svi-recepti-link-container {
@@ -101,8 +140,73 @@
   font-weight: 600;
   font-size: 0.95rem;
   display: inline-block;
+  transition: all 0.3s ease;
 }
 
 .svi-recepti-link:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .pocetna-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+  
+  .hero-section p {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+  
+  .popularni-recepti-grid {
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  
+  .recept-kartica {
+    flex: 0 0 140px;
+  }
+  
+  .recept-info h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.5rem;
+  }
+  
+  .recept-kartica {
+    flex: 0 0 130px;
+    min-height: 170px;
+  }
+  
+  .recept-slika {
+    height: 100px;
+  }
+  
+  .recept-info {
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .svi-recepti-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
 }

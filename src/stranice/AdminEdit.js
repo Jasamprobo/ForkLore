@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
+import "../komponente/AdminEdit.css";  
 
 function AdminEdit() {
   const [recepti, setRecepte] = useState([]);
@@ -43,33 +44,32 @@ function AdminEdit() {
   }
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "1rem" }}>
+    <div className="admin-container">
       <h2>Admin panel - Upravljanje receptima</h2>
       {recepti.length === 0 ? (
         <p>Nema recepata za prikaz.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table className="admin-table">
           <thead>
             <tr>
-              <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>Naziv</th>
-              <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>Kuhinja</th>
-              <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>Akcije</th>
+              <th>Naziv</th>
+              <th>Kuhinja</th>
+              <th>Akcije</th>
             </tr>
           </thead>
           <tbody>
             {recepti.map((r) => (
               <tr key={r.id}>
-                <td style={{ padding: "8px" }}>{r.naziv}</td>
-                <td style={{ padding: "8px" }}>{r.kuhinja || "Nepoznato"}</td>
-                <td style={{ padding: "8px" }}>
-                  {/* Promijenjeno: vodi na DodajRecept u modu uređivanja */}
+                <td>{r.naziv}</td>
+                <td>{r.kuhinja || "Nepoznato"}</td>
+                <td className="akcije-cell">
                   <button
                     onClick={() => navigate(`/dodaj/${r.id}`)}
-                    style={{ marginRight: "8px" }}
+                    className="uredi-gumb"
                   >
                     Uredi
                   </button>
-                  <button onClick={() => handleDelete(r.id)} style={{ color: "red" }}>
+                  <button onClick={() => handleDelete(r.id)} className="obrisi-gumb">
                     Obriši
                   </button>
                 </td>

@@ -86,8 +86,8 @@ function DetaljiRecepta() {
     fetchRecept();
   }, [id, currentUser]);
 
-  // LIKE FUNKCIJA
-  const handleLike = async () => {
+  // UNIVERZALNA FUNKCIJA ZA REAKCIJE
+  const handleReaction = async (reactionType) => {
     if (!currentUser || !recept || updating) return;
     
     setUpdating(true);
@@ -95,104 +95,58 @@ function DetaljiRecepta() {
       const userReactionRef = doc(db, "users", currentUser.uid, "reactions", id);
       const receptRef = doc(db, "recepti", id);
 
-      if (userReaction === 'like') {
-        // Ukloni like
+      const oppositeReaction = reactionType === 'like' ? 'dislike' : 'like';
+      const currentArray = reactionType === 'like' ? 'likes' : 'dislikes';
+      const oppositeArray = reactionType === 'like' ? 'dislikes' : 'likes';
+
+      // Ako je već odabrana ista reakcija - ukloni je
+      if (userReaction === reactionType) {
         await deleteDoc(userReactionRef);
         await updateDoc(receptRef, {
-          likes: arrayRemove(currentUser.uid)
+          [currentArray]: arrayRemove(currentUser.uid)
         });
         setUserReaction(null);
         setRecept(prev => ({
           ...prev,
-          likes: prev.likes.filter(uid => uid !== currentUser.uid)
+          [currentArray]: prev[currentArray].filter(uid => uid !== currentUser.uid)
         }));
       } else {
-        // Dodaj like i ukloni dislike ako postoji
+        // Ako je odabrana nova reakcija
         await setDoc(userReactionRef, {
-          type: 'like',
+          type: reactionType,
           createdAt: new Date()
         });
 
         const updates = {
-          likes: arrayUnion(currentUser.uid)
+          [currentArray]: arrayUnion(currentUser.uid)
         };
 
-        if (userReaction === 'dislike') {
-          updates.dislikes = arrayRemove(currentUser.uid);
+        // Ako je postojaa suprotna reakcija, ukloni je
+        if (userReaction === oppositeReaction) {
+          updates[oppositeArray] = arrayRemove(currentUser.uid);
         }
 
         await updateDoc(receptRef, updates);
 
-        setUserReaction('like');
+        setUserReaction(reactionType);
         setRecept(prev => ({
           ...prev,
-          likes: [...prev.likes, currentUser.uid],
-          dislikes: userReaction === 'dislike' 
-            ? prev.dislikes.filter(uid => uid !== currentUser.uid)
-            : prev.dislikes
+          [currentArray]: [...prev[currentArray], currentUser.uid],
+          [oppositeArray]: userReaction === oppositeReaction 
+            ? prev[oppositeArray].filter(uid => uid !== currentUser.uid)
+            : prev[oppositeArray]
         }));
       }
     } catch (error) {
-      console.error("Greška pri like:", error);
-      alert("Greška pri like-anju recepta.");
+      console.error(`Greška pri ${reactionType}:`, error);
+      alert(`Greška pri ${reactionType === 'like' ? 'like-anju' : 'dislike-anju'} recepta.`);
     } finally {
       setUpdating(false);
     }
   };
 
-  // DISLIKE FUNKCIJA
-  const handleDislike = async () => {
-    if (!currentUser || !recept || updating) return;
-    
-    setUpdating(true);
-    try {
-      const userReactionRef = doc(db, "users", currentUser.uid, "reactions", id);
-      const receptRef = doc(db, "recepti", id);
-
-      if (userReaction === 'dislike') {
-        // Ukloni dislike
-        await deleteDoc(userReactionRef);
-        await updateDoc(receptRef, {
-          dislikes: arrayRemove(currentUser.uid)
-        });
-        setUserReaction(null);
-        setRecept(prev => ({
-          ...prev,
-          dislikes: prev.dislikes.filter(uid => uid !== currentUser.uid)
-        }));
-      } else {
-        // Dodaj dislike i ukloni like ako postoji
-        await setDoc(userReactionRef, {
-          type: 'dislike',
-          createdAt: new Date()
-        });
-
-        const updates = {
-          dislikes: arrayUnion(currentUser.uid)
-        };
-
-        if (userReaction === 'like') {
-          updates.likes = arrayRemove(currentUser.uid);
-        }
-
-        await updateDoc(receptRef, updates);
-
-        setUserReaction('dislike');
-        setRecept(prev => ({
-          ...prev,
-          dislikes: [...prev.dislikes, currentUser.uid],
-          likes: userReaction === 'like' 
-            ? prev.likes.filter(uid => uid !== currentUser.uid)
-            : prev.likes
-        }));
-      }
-    } catch (error) {
-      console.error("Greška pri dislike:", error);
-      alert("Greška pri dislike-anju recepta.");
-    } finally {
-      setUpdating(false);
-    }
-  };
+  const handleLike = () => handleReaction('like');
+  const handleDislike = () => handleReaction('dislike');
 
   const handleDodajKomentar = async () => {
   };
@@ -210,25 +164,23 @@ function DetaljiRecepta() {
       <p><strong>Vrijeme pripreme:</strong> {recept.vrijemePripreme || "N/A"}</p>
       <p><strong>Tagovi:</strong> {recept.tagovi?.join(", ") || "Nema tagova"}</p>
 
-     {/* PRIKAZ VIŠE SLIKA */}
-  {recept.slike && recept.slike.length > 0 ? (
-      <div className="slike-container">
-      <h3>Slike</h3>
-      <div className="slike-grid">
-        {recept.slike.map((slika, index) => (
-          <img 
-            key={index}
-            src={slika} 
-            alt={`${recept.naziv} ${index + 1}`} 
-            className="slika-recepta"
+      {recept.slike && recept.slike.length > 0 ? (
+        <div className="slike-container">
+          <h3>Slike</h3>
+          <div className="slike-grid">
+            {recept.slike.map((slika, index) => (
+              <img 
+                key={index}
+                src={slika} 
+                alt={`${recept.naziv} ${index + 1}`} 
+                className="slika-recepta"
               />
             ))}
-            </div>
-            </div>
-        ) : recept.slika ? (
-  // Fallback za stare recepte koji imaju samo jednu sliku treba maknuti nakon //
-  <img src={recept.slika} alt={recept.naziv} className="slika-recepta-stara" />
-) : null}
+          </div>
+        </div>
+      ) : recept.slika ? (
+        <img src={recept.slika} alt={recept.naziv} className="slika-recepta-stara" />
+      ) : null}
 
       <h3>Opis</h3>
       <p>{recept.opis}</p>

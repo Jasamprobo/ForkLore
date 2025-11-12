@@ -1,21 +1,25 @@
+/* global.css */
+
+/* ===== OSNOVNI STILOVI ZA BODY ===== */
 body {
   background-image: url('./Logo-Background.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed; 
   background-size: cover;
-  background-color: #f8f9fa;
+  background-color: #f8f9fa; /* Fallback boja */
   opacity: 1;
-  min-height: 100vh;
+  min-height: 100vh; /* Minimalna visina cijelog viewporta */
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
   position: relative;
 }
 
+/* Overlay za smanjenje opacity pozadinske slike */
 body::before {
   content: '';
-    background-image: url('./Logo-Background.jpg');
+  background-image: url('./Logo-Background.jpg');
   position: fixed; 
   top: 0;
   left: 0;
@@ -25,50 +29,55 @@ body::before {
   background-position: center center;
   background-attachment: fixed; 
   background-size: cover;
-  opacity: 0.1;
-  z-index: -1;
+  opacity: 0.1; /* Vrlo nizak opacity za suptilan efekt */
+  z-index: -1; /* Stavljamo iza svih elemenata */
 }
 
-        /*BITNO ZA STICKY FOOTER*/
+/* ===== STICKY FOOTER IMPLEMENTACIJA ===== */
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* Osigurava da App zauzima cijeli viewport */
 }
 
 .main-content {
-  flex: 1;
+  flex: 1; /* Glavni sadržaj raste da popuni dostupan prostor */
 }
 
+/* Osigurava da sve stranice koriste sticky footer layout */
 .auth-page-container,
 .recepti-container,
 .detalji-recepta,
 .dodaj-recept-container {
   flex: 1;
 }
+
+/* ===== RESPONZIVNE MEDIA QUERIES ===== */
+
 /* Tableti (768px - 1024px) */
 @media (max-width: 1024px) {
   .container {
-    padding: 0 1.5rem;
+    padding: 0 1.5rem; /* Manji padding na tabletima */
   }
   
   /* Globalne promjene za tablete */
   body {
-    font-size: 15px;
+    font-size: 15px; /* Nešto manji font na tabletima */
   }
 }
 
-/* Mobilni uredaji (576px - 768px) */
+/* Mobilni uređaji (576px - 768px) */
 @media (max-width: 768px) {
   .container {
-    padding: 0 1rem;
+    padding: 0 1rem; /* Još manji padding na mobilnim */
   }
   
   /* Globalne promjene za mobilne */
   body {
-    font-size: 14px;
+    font-size: 14px; /* Manji font za mobilne uređaje */
   }
   
+  /* Prilagodba veličine naslova za mobile */
   h1 {
     font-size: 1.8rem;
   }
@@ -77,22 +86,23 @@ body::before {
     font-size: 1.5rem;
   }
   
-  /* Sakrij neke elemente na mobilnom */
+  /* Sakrij elemente koji nisu potrebni na mobilnom */
   .desktop-only {
     display: none;
   }
 }
 
-/* Mali mobilni uredaji (do 576px) */
+/* Mali mobilni uređaji (do 576px) */
 @media (max-width: 576px) {
   .container {
-    padding: 0 0.5rem;
+    padding: 0 0.5rem; /* Minimalni padding na malim ekranima */
   }
   
   body {
-    font-size: 13px;
+    font-size: 13px; /* Najmanji font za male ekrane */
   }
   
+  /* Dodatna prilagodba naslova */
   h1 {
     font-size: 1.6rem;
   }
@@ -101,82 +111,103 @@ body::before {
     font-size: 1.3rem;
   }
   
-  /* Utility klase za mobilne */
+  /* Utility klase specifične za mobile */
   .mobile-full-width {
-    width: 100% !important;
+    width: 100% !important; /* Prisilno puna širina */
   }
   
   .mobile-text-center {
-    text-align: center !important;
+    text-align: center !important; /* Centriranje teksta */
   }
   
   .mobile-hidden {
-    display: none !important;
+    display: none !important; /* Skrivanje elemenata */
   }
 }
 
-/* ===== RESPONZIVNE UTILITY KLASE ===== */
-/* ===== Besramno skinuto sa ChatGpt-a ==== */
+/* ===== RESPONZIVNE LAYOUT KOMPONENTE ===== */
 
-/* Grid responzivnost */
+/* Grid sustav za responzivne kartice */
 .responsive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Automatsko prilagodavanje */
+  gap: 1rem; /* Razmak između elemenata */
 }
 
-/* Flex responzivnost */
+/* Flexbox sustav za responzivne layout-e */
 .responsive-flex {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-wrap: wrap; /* Omogućava lomljenje u nove redove */
+  gap: 1rem; /* Razmak između elemenata */
 }
 
-/* Slike responzivne */
+/* Osigurava da su slike uvijek responzivne */
 .responsive-image {
-  max-width: 100%;
-  height: auto;
+  max-width: 100%; /* Nikada ne prelazi širinu roditelja */
+  height: auto; /* Očuva aspect ratio */
 }
 
-/* ===== RESPONZIVNE KOMPONENTE ===== */
+/* ===== RESPONZIVNOST POJEDINAČNIH KOMPONENTI ===== */
 
-/* Navigation responzivnost */
+/* Navigacija na mobilnim uređajima */
 @media (max-width: 768px) {
   .navigation {
-    padding: 0.5rem 0;
+    padding: 0.5rem 0; /* Manji padding */
   }
   
   .nav-links {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: column; /* Vertikalni raspored linkova */
+    gap: 0.5rem; /* Manji razmak */
   }
 }
 
-/* Form responzivnost */
+/* Forme na mobilnim uređajima */
 @media (max-width: 768px) {
   .auth-form,
   .forma-container {
-    margin: 1rem;
-    padding: 1.5rem;
+    margin: 1rem; /* Manji margin */
+    padding: 1.5rem; /* Manji padding */
   }
   
   .filter-bar {
-    flex-direction: column;
+    flex-direction: column; /* Vertikalni filteri */
   }
   
+  /* Filter input-i i select-i pune širine */
   .filter-bar input,
   .filter-bar select {
     width: 100%;
   }
 }
 
-/* Card responzivnost */
+/* Kartice recepata na mobilnim uređajima */
 @media (max-width: 768px) {
   .recept-kartica {
-    margin: 0.5rem;
+    margin: 0.5rem; /* Manji margin */
   }
   
+  /* Jedna kolumna na mobilnim */
   .recept-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ===== DODATNE RESPONZIVNE POBOLJŠANJA ===== */
+
+/* Poboljšanje čitljivosti na svjetlim pozadinama */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem; /* Dodaj padding na mobilnim */
+  }
+}
+
+/* Optimizacija pozadinske slike za mobile */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll; /* Bolje performanse na mobilnim */
+  }
+  
+  body::before {
+    background-attachment: scroll; /* Bolje performanse na mobilnim */
   }
 }

@@ -1,8 +1,7 @@
 .forma-container {
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: sans-serif;
 }
 
 .forma-recept {
@@ -11,95 +10,168 @@
   gap: 1rem;
 }
 
-label {
+.forma-recept label {
   font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-input,
-textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+.forma-recept input,
+.forma-recept textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-button {
-  background-color: #ff7043;
-  color: white;
-  font-weight: bold;
-  padding: 0.7rem;
+.forma-recept textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.neprijavljen-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.neprijavljen-container button {
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #ff5722;
+.neprijavljen-container button:first-of-type {
+  background: #007bff;
+  color: white;
 }
 
-.poruka {
+.neprijavljen-container button:first-of-type:hover {
+  background: #0056b3;
+}
+
+.registriraj-gumb {
+  margin-left: 1rem;
+  background: #28a745;
+  color: white;
+}
+
+.registriraj-gumb:hover {
+  background: #1e7e34;
+}
+
+.slika-input-container {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.slika-input {
+  flex: 1;
+}
+
+.ukloni-sliku-gumb {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ukloni-sliku-gumb:hover {
+  background: #c82333;
+}
+
+.dodaj-sliku-gumb {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 15px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.dodaj-sliku-gumb:hover {
+  background: #1e7e34;
+}
+
+.spremi-gumb {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.spremi-gumb:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.spremi-gumb:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.greska-poruka {
+  color: #dc3545;
   margin-top: 1rem;
   font-weight: bold;
-}
-/* LIGHTBOX STILOVI */
-.lightbox-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 20px;
+  text-align: center;
+  padding: 0.75rem;
+  background: #f8d7da;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
 }
 
-.lightbox-content {
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.lightbox-image {
-  max-width: 100%;
-  max-height: 90vh;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.lightbox-close {
-  position: absolute;
-  top: -40px;
-  right: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.lightbox-close:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-/* RESPONZIVNOST LIGHTBOX-A */
 @media (max-width: 768px) {
-  .lightbox-content {
-    max-width: 95%;
+  .forma-container {
+    padding: 1rem;
   }
   
-  .lightbox-close {
-    top: -50px;
-    right: -10px;
+  .slika-input-container {
+    flex-direction: column;
+  }
+  
+  .ukloni-sliku-gumb {
+    width: 100%;
+    margin-top: 5px;
+  }
+  
+  .neprijavljen-container button {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+  
+  .registriraj-gumb {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .forma-container {
+    padding: 0.5rem;
+  }
+  
+  .spremi-gumb {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .forma-recept input,
+  .forma-recept textarea {
+    padding: 0.6rem;
   }
 }

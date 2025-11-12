@@ -1,74 +1,158 @@
+/* Footer.css */
 
-/* DODAJ OVO ZA GLAVNI LAYOUT */
+/* ===== OSNOVNI LAYOUT STILOVI ===== */
+
+/* Osigurava da html i body zauzimaju cijelu visinu */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
+/* Glavni root element React aplikacije */
 #root {
-  min-height: 100vh;
+  min-height: 100vh; /* Minimalna visina cijelog viewporta */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Vertikalni raspored elemenata */
 }
 
+/* Glavni sadržaj aplikacije koji raste da popuni prostor */
 .main-content {
-  flex: 1;
+  flex: 1; /* Zauzima preostali prostor između headera i footera */
 }
 
-/* STILOVI ZA FOOTER */
+/* ===== STILOVI ZA FOOTER KOMPONENTU ===== */
+
 .footer {
-  background-color: #222;
-  color: #ddd;
-  padding: 2rem 1rem;
-  margin-top: auto; /* ← KLJUČNO: automatski margin za sticky */
-  font-family: 'Inter', sans-serif;
-  width: 100%;
+  background-color: #222; /* Tamna pozadina */
+  color: #ddd; /* Svijetlo siva boja teksta */
+  padding: 2rem 1rem; /* Vertikalni i horizontalni padding */
+  margin-top: auto; /* KLJUČNO: automatski margin za sticky footer */
+  font-family: 'Inter', sans-serif; /* Moderni font */
+  width: 100%; /* Puna širina */
 }
 
+/* Grid kontejner za footer sekcije */
 .footer-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Automatski responzivni grid */
+  gap: 2rem; /* Razmak između sekcija */
+  max-width: 1100px; /* Maksimalna širina sadržaja */
+  margin: 0 auto; /* Centriranje */
 }
 
+/* Stilovi za naslove u footer sekcijama */
 .footer-section h3,
 .footer-section h4 {
-  color: #fff;
-  margin-bottom: 0.8rem;
+  color: #fff; /* Bijela boja za naslove */
+  margin-bottom: 0.8rem; /* Razmak ispod naslova */
 }
 
+/* Stilovi za paragraf u footer sekcijama */
 .footer-section p {
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.9rem; /* Nešto manji font */
+  line-height: 1.5; /* Bolja čitljivost */
 }
 
+/* Stilovi za liste u footeru */
 .footer-section ul {
-  list-style: none;
-  padding: 0;
+  list-style: none; /* Uklanja bullet points */
+  padding: 0; /* Uklanja default padding */
 }
 
+/* Stilovi za stavke liste */
 .footer-section ul li {
-  margin: 0.4rem 0;
+  margin: 0.4rem 0; /* Vertikalni razmak između stavki */
 }
 
+/* Stilovi za linkove u footeru */
 .footer-section a {
-  color: #ddd;
-  text-decoration: none;
-  transition: color 0.2s;
+  color: #ddd; /* Svijetlo siva boja */
+  text-decoration: none; /* Uklanja podcrtavanje */
+  transition: color 0.2s; /* Glatka tranzicija boje */
 }
 
+/* Hover efekt za linkove */
 .footer-section a:hover {
-  color: #ffb347;
+  color: #ffb347; /* Topla narančasta boja pri hoveru */
 }
 
+/* Donji dio footera (copyright sekcija) */
 .footer-bottom {
-  text-align: center;
-  margin-top: 2rem;
-  border-top: 1px solid #444;
-  padding-top: 1rem;
-  font-size: 0.85rem;
-  color: #aaa;
+  text-align: center; /* Centriran tekst */
+  margin-top: 2rem; /* Razmak iznad */
+  border-top: 1px solid #444; /* Suptilna gornja granica */
+  padding-top: 1rem; /* Razmak iznad teksta */
+  font-size: 0.85rem; /* Manji font */
+  color: #aaa; /* Svjetlija siva boja */
+}
+
+/* ===== RESPONZIVNOST ===== */
+
+/* Tableti (768px - 1024px) */
+@media (max-width: 1024px) {
+  .footer-container {
+    gap: 1.5rem; /* Manji razmak između sekcija */
+    padding: 0 1rem; /* Dodaj horizontalni padding */
+  }
+  
+  .footer {
+    padding: 1.5rem 1rem; /* Manji padding */
+  }
+}
+
+/* Mobilni uređaji (576px - 768px) */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Uže kolone */
+    gap: 1rem; /* Manji razmak */
+  }
+  
+  .footer {
+    padding: 1rem 0.5rem; /* Još manji padding */
+  }
+  
+  .footer-section h3,
+  .footer-section h4 {
+    font-size: 1rem; /* Manji naslovi */
+  }
+}
+
+/* Mali mobilni uređaji (do 576px) */
+@media (max-width: 576px) {
+  .footer-container {
+    grid-template-columns: 1fr; /* Jedna koluna na malim ekranima */
+    text-align: center; /* Centriranje teksta */
+  }
+  
+  .footer-section {
+    margin-bottom: 1rem; /* Razmak između sekcija */
+  }
+  
+  .footer-bottom {
+    margin-top: 1rem; /* Manji razmak */
+    padding-top: 0.75rem; /* Manji padding */
+  }
+}
+
+/* ===== DODATNA POBOLJŠANJA ===== */
+
+/* Poboljšanje kontrasta za bolju čitljivost */
+.footer-section a:focus {
+  outline: 2px solid #ffb347; /* Fokus indikator za accessibility */
+  outline-offset: 2px;
+}
+
+/* Smooth scroll za linkove koji vode na anchor */
+.footer-section a[href^="#"] {
+  scroll-behavior: smooth;
+}
+
+/* Stil za email link */
+.footer-section a[href^="mailto:"] {
+  color: #ffb347; /* Istaknuta boja za email */
+}
+
+.footer-section a[href^="mailto:"]:hover {
+  color: #ff9a00; /* Tamnija narančasta pri hoveru */
 }

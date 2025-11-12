@@ -1,61 +1,139 @@
 /* Navigation.css */
 .navigation {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9); /* Polu-transparentna bijela pozadina */
+  backdrop-filter: blur(10px); /* Blur efekt za moderni izgled */
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  position: sticky;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Suptilna donja granica */
+  position: sticky; /* Lijepi navigaciju na vrh pri skrolanju */
   top: 0;
-  z-index: 1000;
+  z-index: 1000; /* Osigurava da je navigacija iznad drugih elemenata */
 }
 
 .nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  max-width: 1200px; /* Maksimalna širina sadržaja */
+  margin: 0 auto; /* Centriranje kontejnera */
+  padding: 0 2rem; /* Horizontalni padding */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* Logo lijevo, linkovi desno */
+  align-items: center; /* Vertikalno centriranje */
 }
 
 .nav-logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #2d3748;
+  color: #2d3748; /* Tamno siva boja */
   text-decoration: none;
+  transition: color 0.3s ease; /* Glatka tranzicija za hover */
+}
+
+.nav-logo:hover {
+  color: #667eea; /* Plava boja pri hoveru */
 }
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.5rem; /* Razmak između linkova */
   align-items: center;
 }
 
 .nav-links a {
-  color: #4a5568;
+  color: #4a5568; /* Siva boja teksta */
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease; /* Glatka tranzicija boje */
+  font-weight: 500;
 }
 
 .nav-links a:hover {
-  color: #667eea;
+  color: #667eea; /* Plava boja pri hoveru */
 }
 
 .nav-user {
-  color: #2d3748;
+  color: #2d3748; /* Tamno siva boja */
   font-weight: 500;
 }
 
 .nav-logout {
-  background: #e53e3e;
+  background: #e53e3e; /* Crvena boja */
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 6px; /* Zaobljeni rubovi */
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease; /* Glatka tranzicija pozadine */
+  font-weight: 500;
 }
 
 .nav-logout:hover {
-  background: #c53030;
+  background: #c53030; /* Tamnija crvena pri hoveru */
+}
+
+.nav-logout:disabled {
+  background: #a0aec0; /* Siva boja kada je onemogućen */
+  cursor: not-allowed;
+}
+
+/* Responsive dizajn za tablete */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1rem; /* Manji padding na manjim ekranima */
+  }
+  
+  .nav-links {
+    gap: 1rem; /* Manji razmak između linkova */
+  }
+  
+  .nav-logo {
+    font-size: 1.3rem;
+  }
+}
+
+/* Responsive dizajn za mobile */
+@media (max-width: 640px) {
+  .navigation {
+    padding: 0.75rem 0;
+  }
+  
+  .nav-container {
+    flex-direction: column; /* Stapĺjivanje elemenata vertikalno */
+    gap: 1rem;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap; /* Omogućava lomljenje linkova u novi red */
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .nav-user {
+    order: -1; /* Pomakni pozdravnu poruku na početak */
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Dodatni stilovi za aktivni link (opcionalno) */
+.nav-links a.active {
+  color: #667eea; /* Plava boja za aktivni link */
+  font-weight: 600;
+}
+
+/* Animacija za logo (opcionalno) */
+.nav-logo {
+  position: relative;
+}
+
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #667eea;
+  transition: width 0.3s ease;
+}
+
+.nav-logo:hover::after {
+  width: 100%; /* Podcrtavanje pri hoveru */
 }

@@ -7,6 +7,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         
+        {/* Sekcija o aplikaciji */}
         <div className="footer-section">
           <h3>ForkLore</h3>
           <p>
@@ -15,7 +16,7 @@ function Footer() {
           </p>
         </div>
 
-        {/* Korisni linkovi */}
+        {/* Navigacijski linkovi */}
         <div className="footer-section">
           <h4>Brzi linkovi</h4>
           <ul>
@@ -26,7 +27,7 @@ function Footer() {
           </ul>
         </div>
 
-        
+        {/* Kontakt informacije */}
         <div className="footer-section">
           <h4>Kontakt</h4>
           <p>Email: <a href="mailto:info@forklore.com">info@forklore.com</a></p>
@@ -34,7 +35,7 @@ function Footer() {
           <p>Adresa: Sisak, Hrvatska</p>
         </div>
 
-       
+        {/* Promotivna sekcija */}
         <div className="footer-section">
           <h4>Brže do namirnica uz Scooterino!</h4>
           <p>
@@ -43,6 +44,7 @@ function Footer() {
         </div>
       </div>
 
+      {/* Donji dio footera s copyrightom */}
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} ForkLore. Sva prava pridržana.</p>
       </div>

@@ -1,72 +1,77 @@
+
 .auth-wrapper {
-  flex: 1;
+  flex: 1; /* Zauzima preostali prostor između headera i footera */
   display: flex;
   flex-direction: column;
 }
 
-/* AuthForms.css */
-
+/* Kontejner za auth stranice (Login i Register) */
 .auth-page-container {
-  flex: 1; /* ← OVO ĆE SADA RADITI JER POSTOJI DIV */
+  flex: 1; /* Sada radi jer je unutar .auth-wrapper */
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: flex-end; /* Poravnava formu desno */
+  align-items: flex-start; /* Poravnava formu prema vrhu */
   padding: 2rem;
   width: 100%;
 }
 
+/* Unutarnji kontejner za auth formu */
 .auth-container {
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: flex-end; /* Forma na desnoj strani */
+  align-items: flex-start; /* Forma na vrhu */
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1200px; /* Maksimalna širina sadržaja */
+  margin: 0 auto; /* Centriranje */
 }
 
+/* Stilovi za samu auth formu */
 .auth-form {
-  background: #ffffff;
+  background: #ffffff; /* Bijela pozadina */
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e0e0e0;
+  border-radius: 8px; /* Zaobljeni rubovi */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Suptilna sjena */
+  border: 1px solid #e0e0e0; /* Svijetla granica */
   width: 100%;
-  max-width: 350px;
-  margin-right: 2rem;
-  margin-top: 2rem;
+  max-width: 350px; /* Fiksna širina forme */
+  margin-right: 2rem; /* Razmak od desnog ruba */
+  margin-top: 2rem; /* Razmak od vrha */
 }
 
-/* OSTALI STILOVI... */
-
+/* Naslov forme */
 .auth-form h2 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #333; /* Tamno siva boja */
   font-size: 1.5rem;
   font-weight: 600;
 }
 
+/* Stilovi za input polja */
 .auth-input {
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #ccc; /* Svijetlo siva granica */
+  border-radius: 4px; /* Blago zaobljeni rubovi */
   font-size: 1rem;
   background: #fff;
-  font-family: inherit;
+  font-family: inherit; /* Nasljeđuje font od roditelja */
+  transition: border-color 0.2s, box-shadow 0.2s; /* Glatke tranzicije */
 }
 
+/* Fokus stanje za input polja */
 .auth-input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  border-color: #007bff; /* Plava boja pri fokusu */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Plavi glow efekt */
 }
 
+/* Stilovi za submit gumb */
 .auth-button {
   width: 100%;
   padding: 0.8rem;
-  background: #007bff;
+  background: #007bff; /* Plava pozadina */
   color: white;
   border: none;
   border-radius: 4px;
@@ -74,44 +79,91 @@
   font-weight: 500;
   cursor: pointer;
   margin-top: 0.5rem;
+  transition: background-color 0.2s; /* Glatka tranzicija */
 }
 
+/* Hover efekt za gumb */
 .auth-button:hover {
-  background: #0056b3;
+  background: #0056b3; /* Tamnija plava pri hoveru */
 }
 
+/* Stilovi za poruke o greškama */
 .auth-error {
-  color: #dc3545;
+  color: #dc3545; /* Crvena boja teksta */
   text-align: center;
   margin-top: 1rem;
   padding: 0.5rem;
-  background: #f8d7da;
+  background: #f8d7da; /* Svijetlo crvena pozadina */
   border-radius: 4px;
-  border: 1px solid #f5c6cb;
+  border: 1px solid #f5c6cb; /* Crvena granica */
 }
 
+/* Stilovi za logout gumb (koristi se u Navigation komponenti) */
 .logout-button {
-  background: #dc3545;
+  background: #dc3545; /* Crvena pozadina */
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .logout-button:hover {
-  background: #c82333;
+  background: #c82333; /* Tamnija crvena pri hoveru */
 }
 
+/* Tableti i mobilni uređaji */
 @media (max-width: 768px) {
   .auth-page-container {
-    justify-content: center;
-    padding: 1rem;
+    justify-content: center; /* Centriranje forme na manjim ekranima */
+    padding: 1rem; /* Manji padding */
   }
   
   .auth-form {
-    margin-right: 0;
-    max-width: 100%;
+    margin-right: 0; /* Uklanja desni margin */
+    max-width: 100%; /* Puna širina na mobilnim */
+    margin-top: 1rem; /* Manji razmak od vrha */
   }
+}
+
+/* Dodatna responzivnost za vrlo male ekrane */
+@media (max-width: 480px) {
+  .auth-page-container {
+    padding: 0.5rem;
+  }
+  
+  .auth-form {
+    padding: 1.5rem;
+  }
+  
+  .auth-form h2 {
+    font-size: 1.3rem; /* Manji naslov */
+  }
+}
+
+/* Loading state za gumb */
+.auth-button:disabled {
+  background: #6c757d; /* Siva boja kada je onemogućen */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Poboljšanje accessibility za fokus */
+.auth-button:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* Stil za linkove unutar auth formi (ako ih dodas) */
+.auth-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
 }
