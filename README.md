@@ -24,7 +24,7 @@ Instalacija i pokretanje
 
 Kloniraj repozitorijum:
 
-git clone https://github.com/Jasamprobo/ProjektReact
+git clone https://github.com/Jasamprobo/ForkLore.git
 
 
 Uđi u folder projekta:
