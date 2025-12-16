@@ -2,27 +2,38 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
+  color: orange; /*Boja za "dodaj recept" tekst"*/
 }
 
 .forma-recept {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  
 }
 
-.forma-recept label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+/* Tamniji tekst za label-e i input polja */
+.forma-recept label,
+.forma-recept input,
+.forma-recept textarea {
+  color: grey; /* tamno siva */
 }
 
 .forma-recept input,
 .forma-recept textarea {
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid #bdae9a; /* blaga bež granica */
   border-radius: 4px;
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
+  background-color: #f5f0e6; /* nježni bež ton pozadine */
+}
+
+/* Placeholder tekst */
+.forma-recept input::placeholder,
+.forma-recept textarea::placeholder {
+  color: #a5957a;
 }
 
 .forma-recept textarea {

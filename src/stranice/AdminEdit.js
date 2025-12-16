@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import "../komponente/AdminEdit.css";  
+import "../komponente/AdminEdit.css";  // <--- OVO JE ISPRAVNI PATH
 
 function AdminEdit() {
   const [recepti, setRecepte] = useState([]);

@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useAuth } from "./AuthContext";
 import "./Navigation.css";
+import BackButton from "./BackButton";
 
 function Navigation() {
   // Hookovi za autentifikaciju i navigaciju
@@ -24,6 +25,8 @@ function Navigation() {
     <nav className="navigation">
       <div className="nav-container">
         {/* Logo / Brand link koji vodi na početnu stranicu */}
+                 <BackButton />
+
         <Link to="/" className="nav-logo">
           ForkLore
         </Link>
