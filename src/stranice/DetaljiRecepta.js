@@ -259,16 +259,13 @@ function DetaljiRecepta() {
             </div>
             <div className="metadata-item">
               <span className="icon">⏱️</span>
-              <strong>Vrijeme:</strong> {recept.vrijemePripreme || "N/A"} min
+              <strong>Vrijeme:</strong> {recept.vrijemePripreme || "N/A"}
             </div>
             <div className="metadata-item">
               <span className="icon">🏷️</span>
               <strong>Tagovi:</strong> {recept.tagovi?.join(", ") || "Nema"}
             </div>
-            <div className="metadata-item">
-              <span className="icon">👥</span>
-              <strong>Porcije:</strong> {recept.porcije || "4"}
-            </div>
+           
           </div>
 
           {sveSlike.length > 0 && (

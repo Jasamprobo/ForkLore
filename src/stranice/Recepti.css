@@ -166,3 +166,46 @@
     width: 100%;
   }
 }
+
+
+/* ❤️ LIKE FILTER – VIDLJIV I USKLAĐEN */
+.recepti-container .like-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgba(224, 224, 224, 0.8);
+  border-radius: 12px;
+  background: rgba(250, 250, 250, 0.9);
+  font-size: 1rem;
+  font-family: inherit;
+  color: #2d3748;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+/* Hover kao ostali filteri */
+.recepti-container .like-filter:hover {
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* NORMALAN CHECKBOX – samo malo uljepšan */
+.recepti-container .like-filter input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea; /* MODERNI BROWSERI */
+  cursor: pointer;
+}
+
+/* Disabled stanje */
+.recepti-container .like-filter input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.recepti-container .like-filter input[type="checkbox"]:disabled + span {
+  opacity: 0.6;
+}

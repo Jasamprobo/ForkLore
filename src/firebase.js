@@ -1,7 +1,9 @@
 // Import potrebnih Firebase funkcija
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+
 import { getAuth } from "firebase/auth";  // <--- dodano za Auth
+
 
 // Firebase konfiguracija - podaci za povezivanje s Firebase projektom
 // Ovi podaci su jedinstveni za svaki Firebase projekt

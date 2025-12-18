@@ -46,8 +46,13 @@ function Pocetna() {
         <p>Istraži svjetske kuhinje i podijeli vlastite recepte s drugima!</p>
       </div>
 
-      {/* Sekcija popularnih recepata */}
-      <h2>🍲 Popularni recepti</h2>
+      
+          <h2 className="override-black">
+          🍲 Popularni recepti
+        </h2>
+
+
+
       
       {/* Prikaz učitavanja, recepata ili poruke ako nema recepata */}
       {ucitavanje ? (

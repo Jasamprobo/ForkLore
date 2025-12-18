@@ -6,11 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import "./DodajRecept.css";
 
 function DodajRecept() {
-  // Hookovi za rutu i navigaciju
-  const { id } = useParams(); // ID recepta ako se radi o uređivanju
-  const navigate = useNavigate();
-
-  // State varijable za podatke recepta
+  const { id } = useParams();
   const [naziv, postaviNaziv] = useState("");
   const [opis, postaviOpis] = useState("");
   const [sastojci, postaviSastojke] = useState("");
@@ -18,25 +14,24 @@ function DodajRecept() {
   const [vrijemePripreme, postaviVrijeme] = useState("");
   const [tagovi, postaviTagove] = useState("");
   const [kuhinja, postaviKuhinju] = useState("");
-  const [slike, postaviSlike] = useState([""]); // Niz URL-ova slika
-  const [slika, postaviSliku] = useState(""); // Glavna slika (zadržana za kompatibilnost)
+  const [slike, postaviSlike] = useState([""]); 
+  const [slika, postaviSliku] = useState("");
   const [poruka, postaviPoruku] = useState("");
   const [loading, postaviLoading] = useState(false);
 
-  // State varijable za autentifikaciju
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  // Efekt za praćenje stanja autentifikacije korisnika
+  const navigate = useNavigate();
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (korisnik) => {
       setUser(korisnik);
       setCheckingAuth(false);
     });
-    return unsubscribe; // Cleanup funkcija za odjavu listenera
+    return unsubscribe;
   }, []);
 
-  // Efekt za učitavanje postojećeg recepta kada se uređuje (ako postoji ID)
   useEffect(() => {
     if (id) {
       postaviLoading(true);
@@ -45,25 +40,24 @@ function DodajRecept() {
         .then((docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
-            // Popuni formu s postojećim podacima recepta
             postaviNaziv(data.naziv || "");
             postaviOpis(data.opis || "");
-            postaviSastojke((data.sastojci || []).join(", ")); // Niz -> string
+            postaviSastojke((data.sastojci || []).join(", "));
             postaviPripremu(data.priprema || "");
             postaviVrijeme(data.vrijemePripreme || "");
-            postaviTagove((data.tagovi || []).join(", ")); // Niz -> string
+            postaviTagove((data.tagovi || []).join(", "));
             postaviKuhinju(data.kuhinja || "");
+           
             
-            // Rukovanje slikama - podrška za stare i nove formate
             if (data.slike && data.slike.length > 0) {
-              postaviSlike(data.slike); // Novi format (niz slika)
+              postaviSlike(data.slike);
             } else if (data.slika) {
-              postaviSlike([data.slika]); // Stari format (jedna slika)
+              postaviSlike([data.slika]);
             } else {
-              postaviSlike([""]); // Prazan niz ako nema slika
+              postaviSlike([""]);
             }
             
-            postaviSliku(data.slika || ""); // Zadrži za kompatibilnost
+            postaviSliku(data.slika || "");
           } else {
             postaviPoruku("Recept nije pronađen.");
           }
@@ -77,9 +71,8 @@ function DodajRecept() {
     }
   }, [id]);
 
-  // Funkcije za upravljanje višestrukim slikama
   const dodajSliku = () => {
-    postaviSlike([...slike, ""]); // Dodaj novo prazno polje za sliku
+    postaviSlike([...slike, ""]);
   };
 
   const ukloniSliku = (index) => {
@@ -94,11 +87,9 @@ function DodajRecept() {
     postaviSlike(noveSlike);
   };
 
-  // Glavna funkcija za spremanje recepta (dodavanje ili ažuriranje)
   const spremiRecept = async (e) => {
     e.preventDefault();
 
-    // Validacija obaveznih polja
     if (!naziv || !opis || !sastojci || !priprema) {
       postaviPoruku("⚠️ Ispuni sva obavezna polja!");
       return;
@@ -108,32 +99,27 @@ function DodajRecept() {
     postaviPoruku("");
 
     try {
-      // Priprema podataka za spremanje
       const filtriraneSlike = slike.filter(url => url.trim() !== "");
-      const receptPodaci = {
+        const receptPodaci = {
         naziv,
         opis,
-        sastojci: sastojci.split(",").map((s) => s.trim()), // String -> niz
+        sastojci: sastojci.split(",").map((s) => s.trim()),
         priprema,
         vrijemePripreme,
-        tagovi: tagovi.split(",").map((t) => t.trim()), // String -> niz
+        tagovi: tagovi.split(",").map((t) => t.trim()),
         kuhinja,
         slike: filtriraneSlike,
-        slika: filtriraneSlike.length > 0 ? filtriraneSlike[0] : "" // Prva slika kao glavna
+        slika: filtriraneSlike.length > 0 ? filtriraneSlike[0] : "",
+      
       };
 
-      // Ažuriranje postojećeg ili dodavanje novog recepta
       if (id) {
         const docRef = doc(db, "recepti", id);
         await updateDoc(docRef, receptPodaci);
-        navigate("/recepti", { 
-          state: { successMessage: "✅ Promjene su uspješno spremljene!" } 
-        });
+        navigate("/recepti", { state: { successMessage: "✅ Promjene su uspješno spremljene!" } });
       } else {
         await addDoc(collection(db, "recepti"), receptPodaci);
-        navigate("/recepti", { 
-          state: { successMessage: "✅ Recept uspješno dodan!" } 
-        });
+        navigate("/recepti", { state: { successMessage: "✅ Recept uspješno dodan!" } });
       }
     } catch (error) {
       console.error("Greška:", error);
@@ -143,18 +129,16 @@ function DodajRecept() {
     }
   };
 
-  // Prikaz učitavanja dok se provjerava autentifikacija
   if (checkingAuth || loading) {
     return <p>Učitavanje...</p>;
   }
 
-  // Provjera je li korisnik prijavljen
   if (!user) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
+      <div className="neprijavljen-container">
         <p>⚠️ Morate biti prijavljeni da biste dodali recept.</p>
         <button onClick={() => navigate("/login")}>Prijavi se</button>
-        <button onClick={() => navigate("/register")} style={{ marginLeft: "1rem" }}>
+        <button onClick={() => navigate("/register")} className="registriraj-gumb">
           Registriraj se
         </button>
       </div>
@@ -166,7 +150,6 @@ function DodajRecept() {
       <h2>{id ? "Uredi recept" : "Dodaj novi recept"} 🍲</h2>
 
       <form onSubmit={spremiRecept} className="forma-recept">
-        {/* Polja forme za unos podataka o receptu */}
         <label>Naziv recepta *</label>
         <input
           type="text"
@@ -183,29 +166,36 @@ function DodajRecept() {
           required
         />
 
-        <label>Sastojci (odvojeni zarezom) *</label>
-        <textarea
+              <textarea
+          name="sastojci"
           value={sastojci}
           onChange={(e) => postaviSastojke(e.target.value)}
           placeholder="npr. brašno, jaja, mlijeko"
           required
         />
 
-        <label>Priprema *</label>
-        <textarea
-          value={priprema}
-          onChange={(e) => postaviPripremu(e.target.value)}
-          placeholder="Opiši korake pripreme..."
-          required
-        />
+        
 
-        <label>Vrijeme pripreme</label>
-        <input
-          type="text"
-          value={vrijemePripreme}
-          onChange={(e) => postaviVrijeme(e.target.value)}
-          placeholder="npr. 45 minuta"
-        />
+                <textarea
+            name="priprema"
+            value={priprema}
+            onChange={(e) => postaviPripremu(e.target.value)}
+            placeholder="Opiši korake pripreme..."
+            required
+          />
+
+            {/*Drop down meni za vrijeme pripreme*/}
+                <label>Vrijeme pripreme</label>  
+          <select
+            value={vrijemePripreme}
+            onChange={(e) => postaviVrijeme(e.target.value)}
+          >
+            <option value="">Odaberi vrijeme</option>
+            <option value="15 min">15 min</option>
+            <option value="30 min">30 min</option>
+            <option value="60+ min">60+ min</option>
+          </select>
+
 
         <label>Tagovi / Kategorije (odvojeni zarezom)</label>
         <input
@@ -222,31 +212,22 @@ function DodajRecept() {
           onChange={(e) => postaviKuhinju(e.target.value)}
           placeholder="Balkanska / Talijanska / Azijska..."
         />
-
-        {/* Sekcija za višestruke slike */}
+        
         <label>Slike (URL-ovi, opcionalno)</label>
         {slike.map((slika, index) => (
-          <div key={index} style={{ display: "flex", marginBottom: "10px" }}>
+          <div key={index} className="slika-input-container">
             <input
               type="text"
               value={slika}
               onChange={(e) => promjeniSliku(index, e.target.value)}
               placeholder={`URL slike ${index + 1}...`}
-              style={{ flex: 1 }}
+              className="slika-input"
             />
             {slike.length > 1 && (
               <button
                 type="button"
                 onClick={() => ukloniSliku(index)}
-                style={{ 
-                  marginLeft: "10px", 
-                  background: "red", 
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "5px 10px",
-                  cursor: "pointer"
-                }}
+                className="ukloni-sliku-gumb"
               >
                 ✕
               </button>
@@ -257,34 +238,18 @@ function DodajRecept() {
         <button
           type="button"
           onClick={dodajSliku}
-          style={{
-            background: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            padding: "8px 15px",
-            cursor: "pointer",
-            marginBottom: "15px"
-          }}
+          className="dodaj-sliku-gumb"
         >
           + Dodaj još jednu sliku
         </button>
 
-        {/* Gumb za spremanje */}
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="spremi-gumb">
           {id ? "Spremi promjene" : "Spremi recept"}
         </button>
       </form>
 
-      {/* Prikaz poruka o greškama */}
       {poruka && !poruka.startsWith("✅") && (
-        <p
-          className="poruka"
-          style={{
-            color: "red",
-            marginTop: "1rem",
-          }}
-        >
+        <p className="greska-poruka">
           {poruka}
         </p>
       )}

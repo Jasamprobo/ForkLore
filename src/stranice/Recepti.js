@@ -1,89 +1,116 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { db, auth } from "../firebase";
 import { Link, useLocation } from "react-router-dom";
-import "./Recepti.css"
+import "./Recepti.css";
+
 
 function Recepti() {
-  // State varijable za recepte i filtere
-  const [recepti, setRecepti] = useState([]);        // Svi recepti iz baze
-  const [filtrirani, setFiltrirani] = useState([]);  // Recepti filtrirani prema kriterijima
-  const [ucitavanje, setUcitavanje] = useState(true); // Status učitavanja
+  // ===== STATE =====
+  const [recepti, setRecepti] = useState([]);
+  const [filtrirani, setFiltrirani] = useState([]);
+  const [ucitavanje, setUcitavanje] = useState(true);
 
-  // State varijable za filtere
-  const [search, setSearch] = useState("");          // Pretraga po nazivu
-  const [kuhinja, setKuhinja] = useState("");        // Filter po kuhinji
-  const [tag, setTag] = useState("");                // Filter po tagu
-  const [vrijeme, setVrijeme] = useState("");        // Filter po vremenu pripreme
+  // Filteri
+  const [search, setSearch] = useState("");
+  const [kuhinja, setKuhinja] = useState("");
+  const [tag, setTag] = useState("");
+  const [vrijeme, setVrijeme] = useState("");
+  const [samoLajkani, setSamoLajkani] = useState(false);
+  const [userReactions, setUserReactions] = useState({}); // { recipeId: "like" }
 
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Efekt za prikaz success poruke nakon dodavanja/uređivanja recepta
+  // ===== SUCCESS MESSAGE =====
   useEffect(() => {
     if (location.state?.successMessage) {
       setSuccessMessage(location.state.successMessage);
-      // Očisti state kako se poruka ne bi ponovno prikazala pri refreshu
       window.history.replaceState({}, document.title);
-      // Automatski sakrij poruku nakon 4 sekunde
       const timer = setTimeout(() => setSuccessMessage(""), 4000);
       return () => clearTimeout(timer);
     }
   }, [location.state]);
 
-  // Efekt za dohvaćanje svih recepata iz Firestore baze
+  // ===== DOHVAT RECEPATA =====
   useEffect(() => {
     async function dohvatRecepata() {
       try {
         const snapshot = await getDocs(collection(db, "recepti"));
-        const lista = snapshot.docs.map((doc) => ({ 
-          id: doc.id,           // ID dokumenta iz Firestore
-          ...doc.data()         // Svi podaci recepta
+        const lista = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
         }));
         setRecepti(lista);
-        setFiltrirani(lista);   // Inicijalno prikaži sve recepte
-      } catch (error) {
-        console.error("⚠️ Greška pri dohvaćanju recepata:", error);
+        setFiltrirani(lista);
+      } catch (err) {
+        console.error("Greška:", err);
       } finally {
-        setUcitavanje(false);   // Završi učitavanje bez obzira na uspjeh/neuspjeh
+        setUcitavanje(false);
       }
     }
     dohvatRecepata();
   }, []);
 
-  // Efekt za filtriranje recepata kada se promijene filteri
+  // ===== DOHVAT REAKCIJA =====
+  useEffect(() => {
+    async function dohvatReakcija() {
+      const user = auth.currentUser;
+      if (!user) {
+        setUserReactions({});
+        return;
+      }
+      try {
+        const reactionsCol = collection(db, "users", user.uid, "reactions");
+        const snapshot = await getDocs(reactionsCol);
+
+        const reakcije = {};
+        snapshot.forEach((doc) => {
+          reakcije[doc.id] = doc.data().type || "like"; // pretpostavka da je 'type' polje ili samo lajk
+        });
+
+        setUserReactions(reakcije);
+      } catch (err) {
+        console.error("Greška pri dohvaćanju reakcija:", err);
+      }
+    }
+
+    dohvatReakcija();
+
+    // Opcionalno, ako želiš osvježavati reakcije svaki put kad se korisnik promijeni
+    // možeš dodati auth listener (nije uključeno ovdje)
+  }, [auth.currentUser]);
+
+  // ===== FILTER LOGIKA =====
   useEffect(() => {
     let filtrirano = recepti.filter((r) =>
       r.naziv.toLowerCase().includes(search.toLowerCase())
     );
 
-    // Primjeni dodatne filtere ako su postavljeni
     if (kuhinja) filtrirano = filtrirano.filter((r) => r.kuhinja === kuhinja);
     if (tag) filtrirano = filtrirano.filter((r) => r.tagovi?.includes(tag));
-    if (vrijeme) {
-      filtrirano = filtrirano.filter((r) =>
-        parseInt(r.vrijemePripreme || 0) <= parseInt(vrijeme)
-      );
+    if (vrijeme)
+      filtrirano = filtrirano.filter((r) => r.vrijemePripreme === vrijeme);
+
+    if (samoLajkani) {
+      filtrirano = filtrirano.filter((r) => userReactions[r.id] === "like");
     }
 
     setFiltrirani(filtrirano);
-  }, [search, kuhinja, tag, vrijeme, recepti]);
+  }, [search, kuhinja, tag, vrijeme, samoLajkani, recepti, userReactions]);
 
-  // Prikaz indikatora učitavanja dok se podaci dohvaćaju
   if (ucitavanje) return <p>Učitavanje recepata...</p>;
 
   return (
     <div className="recepti-container">
-      {/* Prikaz success poruke ako postoji */}
       {successMessage && (
         <div className="success-message">{successMessage}</div>
       )}
 
       <h2>Recepti iz cijelog svijeta 🌍</h2>
 
-      {/* Traka s filterima za pretragu recepata */}
+      {/* ===== FILTER BAR ===== */}
       <div className="filter-bar">
-        {/* Polje za pretragu po nazivu */}
         <input
           type="text"
           placeholder="Pretraži po nazivu..."
@@ -91,17 +118,16 @@ function Recepti() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {/* Padajući izbornik za filter po kuhinji */}
         <select value={kuhinja} onChange={(e) => setKuhinja(e.target.value)}>
           <option value="">Sve kuhinje</option>
           <option value="Talijanska">Talijanska</option>
           <option value="Meksička">Meksička</option>
           <option value="Japanska">Japanska</option>
           <option value="Indijska">Indijska</option>
-          <option value="Balkanska">Balkanska</option>
+          <option value="Balkanska">Balkanska</option> 
+
         </select>
 
-        {/* Padajući izbornik za filter po tagovima */}
         <select value={tag} onChange={(e) => setTag(e.target.value)}>
           <option value="">Svi tagovi</option>
           <option value="Vegetarijansko">Vegetarijansko</option>
@@ -109,16 +135,25 @@ function Recepti() {
           <option value="Brzo jelo">Brzo jelo</option>
         </select>
 
-        {/* Padajući izbornik za filter po vremenu pripreme */}
         <select value={vrijeme} onChange={(e) => setVrijeme(e.target.value)}>
-          <option value="">Bez ograničenja</option>
-          <option value="15">Do 15 min</option>
-          <option value="30">Do 30 min</option>
-          <option value="60">Do 60 min</option>
+          <option value="">Sva vremena</option>
+          <option value="15 min">15 min</option>
+          <option value="30 min">30 min</option>
+          <option value="60+ min">60+ min</option>
         </select>
+
+        {/* ❤️ Like checkbox */}
+        <label className="like-filter">
+          <input
+            type="checkbox"
+            checked={samoLajkani}
+            onChange={(e) => setSamoLajkani(e.target.checked)}
+          />
+          <span>❤️ Omiljeni Recepti</span>
+        </label>
       </div>
 
-      {/* Prikaz filtriranih recepata ili poruke ako nema rezultata */}
+      {/* ===== RECEPTI ===== */}
       {filtrirani.length > 0 ? (
         <div className="recept-grid">
           {filtrirani.map((recept) => (
@@ -127,7 +162,6 @@ function Recepti() {
               to={`/recept/${recept.id}`}
               className="recept-kartica"
             >
-              {/* Slika recepta ako postoji */}
               {recept.slika && (
                 <img
                   src={recept.slika}
@@ -136,9 +170,15 @@ function Recepti() {
                 />
               )}
               <h3>{recept.naziv}</h3>
-              <p><strong>Kuhinja:</strong> {recept.kuhinja || "Nepoznato"}</p>
-              <p><strong>Vrijeme:</strong> {recept.vrijemePripreme || "N/A"} min</p>
-              <p><strong>Tagovi:</strong> {recept.tagovi?.join(", ") || "Nema"}</p>
+              <p>
+                <strong>Kuhinja:</strong> {recept.kuhinja || "Nepoznato"}
+              </p>
+              <p>
+                <strong>Vrijeme:</strong> {recept.vrijemePripreme || "N/A"}
+              </p>
+              <p>
+                <strong>Tagovi:</strong> {recept.tagovi?.join(", ") || "Nema"}
+              </p>
             </Link>
           ))}
         </div>
