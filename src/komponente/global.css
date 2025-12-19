@@ -1,7 +1,4 @@
 
-/* ===== OSNOVNI STILOVI ZA BODY ===== */
-
-* {box-sizing: border-box;}
 body {
   background-image: url('./Logo-Background.jpg');
   background-repeat: no-repeat;
@@ -54,7 +51,7 @@ body::before {
   flex: 1;
 }
 
-/* ===== RESPONZIVNE MEDIA QUERIES ===== */
+/* ===== RESPONZIVNOST? ==== */
 
 /* Tableti (768px - 1024px) */
 @media (max-width: 1024px) {
@@ -127,8 +124,6 @@ body::before {
   }
 }
 
-/* ===== RESPONZIVNE LAYOUT KOMPONENTE ===== */
-
 /* Grid sustav za responzivne kartice */
 .responsive-grid {
   display: grid;
@@ -149,7 +144,7 @@ body::before {
   height: auto; /* Očuva aspect ratio */
 }
 
-/* ===== RESPONZIVNOST POJEDINAČNIH KOMPONENTI ===== */
+/* ===== RESPONZIVNOST POJEDINAČNIH STVARI ===== */
 
 /* Navigacija na mobilnim uređajima */
 @media (max-width: 768px) {
@@ -193,8 +188,6 @@ body::before {
     grid-template-columns: 1fr;
   }
 }
-
-/* ===== DODATNE RESPONZIVNE POBOLJŠANJA ===== */
 
 /* Poboljšanje čitljivosti na svjetlim pozadinama */
 @media (max-width: 768px) {

@@ -107,13 +107,15 @@ function Recepti() {
         <div className="success-message">{successMessage}</div>
       )}
 
+      
       <h2>Recepti iz cijelog svijeta 🌍</h2>
+
 
       {/* ===== FILTER BAR ===== */}
       <div className="filter-bar">
         <input
           type="text"
-          placeholder="Pretraži po nazivu..."
+          placeholder="Pretraživanje..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -122,7 +124,7 @@ function Recepti() {
           <option value="">Sve kuhinje</option>
           <option value="Talijanska">Talijanska</option>
           <option value="Meksička">Meksička</option>
-          <option value="Japanska">Japanska</option>
+          <option value="Azijska">Azijska</option>
           <option value="Indijska">Indijska</option>
           <option value="Balkanska">Balkanska</option> 
 
